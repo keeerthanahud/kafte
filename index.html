@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAFTÉ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:#D8CBB8;
+font-family:'Playfair Display',serif;
+color:#0D1B2A;
+}
+
+/* HEADER */
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:30px 60px;
+flex-wrap:wrap;
+}
+
+.logo{
+letter-spacing:8px;
+font-size:22px;
+}
+
+nav{
+display:flex;
+align-items:center;
+gap:30px;
+flex-wrap:wrap;
+}
+
+nav a{
+text-decoration:none;
+color:#0D1B2A;
+font-size:14px;
+letter-spacing:2px;
+}
+
+/* CART */
+
+.cart-icon{
+position:relative;
+width:24px;
+height:24px;
+}
+
+.cart-icon svg{
+width:100%;
+fill:#0D1B2A;
+}
+
+#cart-count{
+position:absolute;
+top:-6px;
+right:-8px;
+background:#0D1B2A;
+color:white;
+font-size:10px;
+padding:2px 6px;
+border-radius:50%;
+display:none;
+}
+
+/* HERO */
+
+.hero{
+height:90vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+text-align:center;
+padding:20px;
+}
+
+.hero h2{
+font-size:18px;
+letter-spacing:6px;
+margin-bottom:20px;
+}
+
+.hero button{
+background:#0D1B2A;
+color:#D8CBB8;
+border:none;
+padding:12px 40px;
+letter-spacing:3px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.hero button:hover{
+background:#1B263B;
+}
+
+/* COLLECTION */
+
+.collection{
+text-align:center;
+padding:100px 20px;
+background:#F2EDE5;
+}
+
+.collection h3{
+letter-spacing:5px;
+margin-bottom:40px;
+}
+
+.product{
+margin-bottom:15px;
+font-size:16px;
+}
+
+/* FOOTER */
+
+footer{
+text-align:center;
+padding:40px;
+font-size:12px;
+letter-spacing:2px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+header{
+flex-direction:column;
+gap:20px;
+padding:20px;
+}
+
+nav{
+justify-content:center;
+}
+
+.hero{
+height:70vh;
+}
+
+.hero h2{
+font-size:16px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">KAFTÉ</div>
+
+<nav>
+<a href="#">HOME</a>
+<a href="shop.html">SHOP</a>
+<a href="about.html">ABOUT</a>
+<a href="contact.html">CONTACT</a>
+
+<a href="cart.html" class="cart-icon">
+<svg viewBox="0 0 24 24">
+<path d="M7 4H3v2h2l3.6 7.59-1.35 2.45A2 2 0 0 0 9 19h10v-2H9.42a.25.25 0 0 1-.22-.37L10.1 15h6.45a2 2 0 0 0 1.79-1.11L21 7H6.21l-.94-2z"/>
+</svg>
+<span id="cart-count">0</span>
+</a>
+
+</nav>
+
+</header>
+
+<section class="hero">
+<h2>FIRST COLLECTION 2026</h2>
+<button onclick="window.location.href='shop.html'">ENTER STORE</button>
+</section>
+
+<section class="collection">
+
+<h3>MINIMAL ESSENTIALS</h3>
+
+<div class="product">Classic Beige Tee — ₹999</div>
+<div class="product">Midnight Blue Tee — ₹999</div>
+
+</section>
+
+<footer>
+© 2026 KAFTÉ
+</footer>
+
+<script>
+
+function updateCartCount(){
+
+const cart = JSON.parse(localStorage.getItem("kafteCart")) || [];
+const badge = document.getElementById("cart-count");
+
+const totalItems = cart.reduce((sum,item)=>sum+(item.quantity || 1),0);
+
+if(totalItems > 0){
+badge.style.display="block";
+badge.innerText=totalItems;
+}else{
+badge.style.display="none";
+}
+
+}
+
+updateCartCount();
+
+</script>
+
+</body>
+</html>

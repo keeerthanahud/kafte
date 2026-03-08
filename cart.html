@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart | KAFTÉ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Playfair Display',serif;
+background:#F2EDE5;
+color:#0D1B2A;
+}
+
+/* HEADER */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:30px 60px;
+}
+
+.logo{
+font-size:22px;
+letter-spacing:8px;
+}
+
+/* CART CONTAINER */
+
+.cart-container{
+max-width:1000px;
+margin:auto;
+padding:40px 20px;
+}
+
+.cart-title{
+font-size:22px;
+letter-spacing:4px;
+margin-bottom:30px;
+}
+
+/* CART ITEM */
+
+.cart-item{
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:white;
+padding:20px;
+margin-bottom:15px;
+}
+
+.cart-item img{
+width:80px;
+height:80px;
+object-fit:cover;
+}
+
+.item-info{
+flex:1;
+margin-left:20px;
+}
+
+.item-info h3{
+font-size:15px;
+margin-bottom:5px;
+}
+
+/* QUANTITY */
+
+.qty-controls{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.qty-controls button{
+padding:4px 10px;
+border:none;
+background:#0D1B2A;
+color:white;
+cursor:pointer;
+}
+
+/* REMOVE */
+
+.remove{
+color:red;
+cursor:pointer;
+font-size:13px;
+}
+
+/* TOTAL */
+
+.cart-summary{
+margin-top:30px;
+text-align:right;
+}
+
+.total{
+font-size:18px;
+margin-bottom:10px;
+}
+
+.free{
+font-size:13px;
+margin-bottom:20px;
+}
+
+/* CHECKOUT */
+
+.checkout-btn{
+padding:12px 40px;
+border:none;
+background:#0D1B2A;
+color:white;
+cursor:pointer;
+letter-spacing:2px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.cart-item{
+flex-direction:column;
+align-items:flex-start;
+gap:10px;
+}
+
+.cart-summary{
+text-align:left;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+<div class="logo">KAFTÉ</div>
+</header>
+
+<div class="cart-container">
+
+<div class="cart-title">YOUR CART</div>
+
+<div id="cart-items"></div>
+
+<div class="cart-summary">
+
+<div class="total">Total: ₹<span id="total">0</span></div>
+
+<div class="free">Free Delivery</div>
+
+<button class="checkout-btn" onclick="goCheckout()">Checkout</button>
+
+</div>
+
+</div>
+
+<script>
+    function goCheckout(){
+window.location.href = "checkout.html";
+}
+
+function getCart(){
+return JSON.parse(localStorage.getItem("kafteCart")) || [];
+}
+
+function saveCart(cart){
+localStorage.setItem("kafteCart", JSON.stringify(cart));
+}
+
+function renderCart(){
+
+let cart = getCart();
+const container = document.getElementById("cart-items");
+
+container.innerHTML="";
+
+let total=0;
+
+cart.forEach((item,index)=>{
+
+total += item.price * item.quantity;
+
+container.innerHTML += `
+<div class="cart-item">
+
+<img src="${item.image}">
+
+<div class="item-info">
+<h3>${item.name}</h3>
+<p>₹${item.price}</p>
+</div>
+
+<div class="qty-controls">
+<button onclick="changeQty(${index},-1)">-</button>
+<span>${item.quantity}</span>
+<button onclick="changeQty(${index},1)">+</button>
+</div>
+
+<div class="remove" onclick="removeItem(${index})">
+Remove
+</div>
+
+</div>
+`;
+
+});
+
+document.getElementById("total").innerText = total;
+
+}
+
+function changeQty(index,change){
+
+let cart = getCart();
+
+cart[index].quantity += change;
+
+if(cart[index].quantity <=0){
+cart.splice(index,1);
+}
+
+saveCart(cart);
+renderCart();
+
+}
+
+function removeItem(index){
+
+let cart = getCart();
+
+cart.splice(index,1);
+
+saveCart(cart);
+renderCart();
+
+}
+
+renderCart();
+
+</script>
+
+</body>
+</html>

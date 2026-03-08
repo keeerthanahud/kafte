@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop | KAFTÉ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Playfair Display', serif;
+background:#F2EDE5;
+color:#0D1B2A;
+}
+
+/* HEADER */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:30px 60px;
+flex-wrap:wrap;
+}
+
+.logo{
+font-size:22px;
+letter-spacing:8px;
+}
+
+/* CART ICON */
+
+.cart-icon{
+position:relative;
+width:26px;
+height:26px;
+cursor:pointer;
+}
+
+.cart-icon svg{
+width:100%;
+fill:#0D1B2A;
+}
+
+#cart-count{
+position:absolute;
+top:-6px;
+right:-8px;
+background:#0D1B2A;
+color:white;
+font-size:10px;
+padding:2px 6px;
+border-radius:50%;
+display:none;
+}
+
+/* PRODUCTS GRID */
+
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:40px;
+padding:60px;
+}
+
+/* PRODUCT CARD */
+
+.product{
+background:white;
+padding:20px;
+text-align:center;
+transition:0.3s;
+}
+
+.product:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.product img{
+width:100%;
+height:320px;
+object-fit:cover;
+margin-bottom:15px;
+}
+
+.product h3{
+font-size:16px;
+margin-bottom:5px;
+}
+
+.product p{
+font-size:14px;
+margin-bottom:10px;
+}
+
+button{
+padding:10px 25px;
+border:none;
+background:#0D1B2A;
+color:white;
+cursor:pointer;
+letter-spacing:1px;
+font-family:'Playfair Display', serif;
+transition:0.3s;
+}
+
+button:hover{
+background:#1B263B;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.header{
+padding:20px;
+}
+
+.products{
+padding:30px 20px;
+gap:25px;
+}
+
+.product img{
+height:260px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="logo">KAFTÉ</div>
+
+<a href="cart.html" class="cart-icon">
+
+<svg viewBox="0 0 24 24">
+<path d="M7 4H3v2h2l3.6 7.59-1.35 2.45A2 2 0 0 0 9 19h10v-2H9.42a.25.25 0 0 1-.22-.37L10.1 15h6.45a2 2 0 0 0 1.79-1.11L21 7H6.21l-.94-2z"/>
+</svg>
+
+<span id="cart-count">0</span>
+
+</a>
+
+</header>
+
+<section class="products">
+
+<div class="product">
+<img src="images/beige-tee.jpg" alt="Beige Tee">
+
+<h3>Beige Oversized Tee</h3>
+<p>₹999</p>
+
+<button onclick="addToCart('Beige Oversized Tee',999,'images/beige-tee.jpg')">
+Add to Cart
+</button>
+
+</div>
+
+<div class="product">
+
+<img src="images/black-tee.jpg" alt="Black Tee">
+
+<h3>Black Minimal Tee</h3>
+<p>₹1199</p>
+
+<button onclick="addToCart('Black Minimal Tee',1199,'images/black-tee.jpg')">
+Add to Cart
+</button>
+
+</div>
+
+</section>
+
+<script>
+
+/* GET CART */
+function getCart(){
+return JSON.parse(localStorage.getItem("kafteCart")) || [];
+}
+
+/* SAVE CART */
+function saveCart(cart){
+localStorage.setItem("kafteCart", JSON.stringify(cart));
+}
+
+/* UPDATE CART BADGE */
+
+function updateCartCount(){
+
+const cart = getCart();
+const badge = document.getElementById("cart-count");
+
+const totalItems = cart.reduce((sum,item)=>sum+(item.quantity || 1),0);
+
+if(totalItems > 0){
+badge.style.display="block";
+badge.innerText=totalItems;
+}else{
+badge.style.display="none";
+}
+
+}
+
+/* ADD TO CART */
+
+function addToCart(name,price,image){
+
+let cart = getCart();
+
+const existing = cart.find(item => item.name === name);
+
+if(existing){
+existing.quantity += 1;
+}else{
+cart.push({
+name:name,
+price:Number(price),
+image:image,
+quantity:1
+});
+}
+
+saveCart(cart);
+updateCartCount();
+
+}
+
+/* INIT */
+
+updateCartCount();
+
+</script>
+
+</body>
+</html>

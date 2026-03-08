@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout | KAFTÉ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:'Playfair Display',serif;
+background:#F2EDE5;
+color:#0D1B2A;
+}
+
+/* HEADER */
+
+header{
+text-align:center;
+padding:30px;
+letter-spacing:8px;
+font-size:22px;
+}
+
+/* MAIN LAYOUT */
+
+.checkout-container{
+max-width:1100px;
+margin:auto;
+display:grid;
+grid-template-columns:1fr 400px;
+gap:40px;
+padding:30px;
+}
+
+/* FORM */
+
+.form-box{
+background:white;
+padding:35px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.form-box h2{
+margin-bottom:20px;
+}
+
+input,textarea{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:1px solid #ddd;
+font-family:'Playfair Display',serif;
+}
+
+/* ORDER SUMMARY */
+
+.summary{
+background:white;
+padding:35px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.summary h2{
+margin-bottom:20px;
+}
+
+.cart-item{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+font-size:14px;
+}
+
+/* TOTAL */
+
+.total{
+margin-top:20px;
+font-size:18px;
+}
+
+.free{
+color:green;
+font-size:13px;
+margin:8px 0;
+}
+
+/* BUTTON */
+
+button{
+width:100%;
+padding:14px;
+border:none;
+background:#0D1B2A;
+color:white;
+letter-spacing:2px;
+cursor:pointer;
+margin-top:20px;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.checkout-container{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>KAFTÉ</header>
+
+<div class="checkout-container">
+
+<!-- CUSTOMER DETAILS -->
+
+<div class="form-box">
+
+<h2>Customer Details</h2>
+
+<input type="text" placeholder="Full Name" id="name" required>
+
+<input type="tel" placeholder="Phone Number" id="phone" required>
+
+<textarea placeholder="Full Address" id="address" rows="4"></textarea>
+
+<input type="text" placeholder="City">
+
+<input type="text" placeholder="Pincode">
+
+<input type="text" id="coupon" placeholder="Coupon Code">
+
+<button onclick="applyCoupon()">Apply Coupon</button>
+
+</div>
+
+<!-- ORDER SUMMARY -->
+
+<div class="summary">
+
+<h2>Your Order</h2>
+
+<div id="cart-items"></div>
+
+<div class="free">Free Delivery</div>
+
+<div class="total">
+Total: ₹<span id="total">0</span>
+</div>
+
+<button onclick="payNow()">Pay Securely</button>
+
+</div>
+
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+let cart = JSON.parse(localStorage.getItem("kafteCart")) || [];
+let discount = 0;
+
+/* RENDER CART */
+
+function renderCart(){
+
+const container = document.getElementById("cart-items");
+container.innerHTML = "";
+
+let total = 0;
+
+cart.forEach(item=>{
+
+total += item.price * item.quantity;
+
+container.innerHTML += `
+<div class="cart-item">
+<span>${item.name} x${item.quantity}</span>
+<span>₹${item.price * item.quantity}</span>
+</div>
+`;
+
+});
+
+if(discount){
+total = total - (total * discount);
+}
+
+document.getElementById("total").innerText = total;
+
+}
+
+/* COUPON */
+
+function applyCoupon(){
+
+let code = document.getElementById("coupon").value;
+
+if(code === "KAFTE10"){
+
+discount = 0.10;
+alert("Coupon Applied");
+
+}else{
+
+alert("Invalid Coupon");
+
+}
+
+renderCart();
+
+}
+
+/* PAYMENT */
+
+function payNow(){
+
+let name = document.getElementById("name").value;
+let phone = document.getElementById("phone").value;
+let address = document.getElementById("address").value;
+
+if(!name || !phone || !address){
+alert("Please fill all details");
+return;
+}
+
+let total = document.getElementById("total").innerText;
+
+let options = {
+
+key: "YOUR_RAZORPAY_KEY",
+
+amount: total * 100,
+
+currency: "INR",
+
+name: "KAFTÉ",
+
+description: "KAFTÉ Order",
+
+handler: function(response){
+
+alert("Payment Successful!");
+
+localStorage.removeItem("kafteCart");
+
+window.location.href="index.html";
+
+}
+
+};
+
+let rzp = new Razorpay(options);
+rzp.open();
+
+}
+
+renderCart();
+
+</script>
+
+</body>
+</html>
